@@ -1,0 +1,108 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-space-900 text-white font-sans overflow-x-hidden;
+  background: linear-gradient(to bottom, #0b0719, #2c1950);
+  min-height: 100vh;
+}
+
+.glassmorphism {
+  @apply bg-space-800/40 backdrop-blur-md border border-space-600/30 shadow-lg;
+}
+
+.star {
+  @apply absolute rounded-full bg-white;
+  box-shadow: 0 0 4px 1px rgba(255, 255, 255, 0.4);
+}
+
+.star-optimized {
+  @apply absolute rounded-full bg-white;
+  box-shadow: 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+.star-twinkle {
+  animation: twinkle 4s ease-in-out infinite alternate;
+}
+
+@keyframes twinkle {
+  0% {
+    opacity: 0.2;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+}
+
+@keyframes flicker {
+  0% { opacity: 0.3; }
+  100% { opacity: 0.6; }
+}
+
+.moon-glow {
+  filter: drop-shadow(0 0 8px rgba(253, 230, 138, 0.5));
+}
+
+.moon-glow-optimized {
+  /* Using SVG filter instead of drop-shadow for better performance */
+}
+
+.input-field {
+  @apply glassmorphism w-full p-4 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-moonglow/50 transition-all;
+}
+
+.btn-primary {
+  @apply glassmorphism px-6 py-3 rounded-full text-moonglow font-medium hover:bg-space-700/50 active:scale-95 transition-all;
+}
+
+.cosmic-container {
+  @apply relative overflow-hidden;
+  background: radial-gradient(ellipse at top, #2c1950, transparent),
+              radial-gradient(ellipse at bottom, #0b0719, transparent);
+}
+
+/* Calendar Styles */
+.calendar-grid {
+  @apply rounded-lg overflow-hidden;
+}
+
+.calendar-grid .grid-cols-7 > * {
+  @apply border border-white/5;
+}
+
+.animate-pulse-slow {
+  animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.2;
+  }
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@keyframes scaleIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  70% {
+    transform: scale(1.03);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
