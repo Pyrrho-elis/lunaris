@@ -297,7 +297,7 @@ function AppContent() {
           <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}>
             <h1 className="text-3xl md:text-4xl font-bold text-moonglow flex items-center justify-center gap-2">
               <Moon className="h-6 w-6 md:h-8 md:w-8" />
-              <span>Luna</span>
+              <span>Lunaris</span>
             </h1>
             <p className="text-stardust/80 font-poppins font-light mt-1 text-sm md:text-base">
               Moon Phase & Daily Reflection
