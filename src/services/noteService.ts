@@ -9,6 +9,7 @@ import {
     where,
     Timestamp,
     orderBy,
+    limit,
   } from "firebase/firestore"
   import { db } from "../lib/firebase"
   
@@ -20,15 +21,43 @@ import {
     createdAt: Timestamp
   }
   
-  export async function saveNote(note: Omit<Note, "id" | "createdAt">) {
+  export async function getNoteForDate(userId: string, date: string) {
     try {
-      const noteData = {
-        ...note,
-        createdAt: Timestamp.now(),
+      const q = query(collection(db, "notes"), where("userId", "==", userId), where("date", "==", date), limit(1))
+  
+      const querySnapshot = await getDocs(q)
+      if (querySnapshot.empty) {
+        return null
       }
   
-      const docRef = await addDoc(collection(db, "notes"), noteData)
-      return { id: docRef.id, ...noteData }
+      const doc = querySnapshot.docs[0]
+      return { id: doc.id, ...doc.data() } as Note
+    } catch (error) {
+      console.error("Error getting note for date:", error)
+      throw error
+    }
+  }
+  
+  export async function saveNote(note: Omit<Note, "id" | "createdAt">) {
+    try {
+      // Check if a note already exists for this date
+      const existingNote = await getNoteForDate(note.userId, note.date)
+  
+      if (existingNote) {
+        // Update existing note
+        await updateNote(existingNote.id!, note.text)
+        return { ...existingNote, text: note.text }
+      } else {
+        // Create new note
+        const noteData = {
+          ...note,
+          createdAt: Timestamp.now(),
+          updatedAt: Timestamp.now(),
+        }
+  
+        const docRef = await addDoc(collection(db, "notes"), noteData)
+        return { id: docRef.id, ...noteData }
+      }
     } catch (error) {
       console.error("Error saving note:", error)
       throw error
@@ -38,7 +67,10 @@ import {
   export async function updateNote(id: string, text: string) {
     try {
       const noteRef = doc(db, "notes", id)
-      await updateDoc(noteRef, { text })
+      await updateDoc(noteRef, {
+        text,
+        updatedAt: Timestamp.now(),
+      })
     } catch (error) {
       console.error("Error updating note:", error)
       throw error

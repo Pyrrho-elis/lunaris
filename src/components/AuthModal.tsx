@@ -63,7 +63,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
       onClick={onClose}
     >
       <motion.div
-        className="w-11/12 max-w-md glassmorphism rounded-xl p-6 relative"
+        className="w-11/12 max-w-sm md:max-w-md glassmorphism rounded-xl p-4 md:p-6 relative"
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.9 }}
@@ -76,30 +76,32 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <button className="absolute top-4 right-4 text-white/70 hover:text-white" onClick={onClose}>
-          <X className="h-5 w-5" />
+        <button className="absolute top-3 right-3 md:top-4 md:right-4 text-white/70 hover:text-white" onClick={onClose}>
+          <X className="h-4 w-4 md:h-5 md:w-5" />
         </button>
 
-        <h2 className="text-2xl font-bold text-moonglow mb-6 flex items-center gap-2">
-          <LogIn className="h-6 w-6" />
+        <h2 className="text-xl md:text-2xl font-bold text-moonglow mb-4 md:mb-6 flex items-center gap-2">
+          <LogIn className="h-5 w-5 md:h-6 md:w-6" />
           {isLogin ? "Welcome Back" : "Join Luna"}
         </h2>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-900/30 border border-red-500/50 rounded-lg text-red-300 text-sm">{error}</div>
+          <div className="mb-4 p-2 md:p-3 bg-red-900/30 border border-red-500/50 rounded-lg text-red-300 text-xs md:text-sm">
+            {error}
+          </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-3 md:space-y-4">
           {!isLogin && (
-            <div className="space-y-2">
-              <label className="text-stardust/80 text-sm">Display Name</label>
+            <div className="space-y-1 md:space-y-2">
+              <label className="text-stardust/80 text-xs md:text-sm">Display Name</label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-stardust/50" />
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 md:h-5 md:w-5 text-stardust/50" />
                 <input
                   type="text"
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
-                  className="input-field pl-10"
+                  className="input-field pl-8 md:pl-10 text-sm md:text-base py-1.5 md:py-2"
                   placeholder="Your name"
                   required={!isLogin}
                 />
@@ -107,53 +109,53 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
             </div>
           )}
 
-          <div className="space-y-2">
-            <label className="text-stardust/80 text-sm">Email</label>
+          <div className="space-y-1 md:space-y-2">
+            <label className="text-stardust/80 text-xs md:text-sm">Email</label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-stardust/50" />
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 md:h-5 md:w-5 text-stardust/50" />
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="input-field pl-10"
+                className="input-field pl-8 md:pl-10 text-sm md:text-base py-1.5 md:py-2"
                 placeholder="your@email.com"
                 required
               />
             </div>
           </div>
 
-          <div className="space-y-2">
-            <label className="text-stardust/80 text-sm">Password</label>
+          <div className="space-y-1 md:space-y-2">
+            <label className="text-stardust/80 text-xs md:text-sm">Password</label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-stardust/50" />
+              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 md:h-5 md:w-5 text-stardust/50" />
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="input-field pl-10"
+                className="input-field pl-8 md:pl-10 text-sm md:text-base py-1.5 md:py-2"
                 placeholder="••••••••"
                 required
               />
             </div>
           </div>
 
-          <button type="submit" disabled={loading} className="btn-primary w-full py-3">
+          <button type="submit" disabled={loading} className="btn-primary w-full py-2 md:py-3 text-sm md:text-base">
             {loading ? "Processing..." : isLogin ? "Sign In" : "Create Account"}
           </button>
         </form>
 
-        <div className="mt-4 flex items-center gap-2">
+        <div className="mt-3 md:mt-4 flex items-center gap-2">
           <div className="h-px bg-stardust/20 flex-1"></div>
-          <span className="text-stardust/50 text-sm">or</span>
+          <span className="text-stardust/50 text-xs md:text-sm">or</span>
           <div className="h-px bg-stardust/20 flex-1"></div>
         </div>
 
         <button
           onClick={handleGoogleLogin}
           disabled={loading}
-          className="mt-4 w-full py-3 border border-stardust/30 rounded-lg flex items-center justify-center gap-2 text-white hover:bg-space-700/50 transition-colors"
+          className="mt-3 md:mt-4 w-full py-2 md:py-3 border border-stardust/30 rounded-lg flex items-center justify-center gap-2 text-white text-sm md:text-base hover:bg-space-700/50 transition-colors"
         >
-          <svg className="h-5 w-5" viewBox="0 0 24 24">
+          <svg className="h-4 w-4 md:h-5 md:w-5" viewBox="0 0 24 24">
             <path
               fill="currentColor"
               d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -175,7 +177,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
           Continue with Google
         </button>
 
-        <div className="mt-6 text-center text-sm text-stardust/70">
+        <div className="mt-4 md:mt-6 text-center text-xs md:text-sm text-stardust/70">
           {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
           <button className="text-moonglow hover:text-white" onClick={() => setIsLogin(!isLogin)}>
             {isLogin ? "Sign Up" : "Sign In"}

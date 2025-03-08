@@ -59,6 +59,19 @@ const LunarCalendar: React.FC<LunarCalendarProps> = ({
 }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date(currentDate))
   const [selectedDate, setSelectedDate] = useState<DateDetails | null>(null)
+  const [isMobile, setIsMobile] = useState(false)
+
+  // Check if mobile on mount
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768)
+
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
 
   // Update current month when currentDate changes
   useEffect(() => {
@@ -135,6 +148,13 @@ const LunarCalendar: React.FC<LunarCalendarProps> = ({
       noteText: hasNoteFlag ? getNoteText(date) : undefined,
       noteId: noteForDate?.id,
     })
+
+    // On mobile, close the calendar after selecting a date
+    if (isMobile) {
+      setTimeout(() => {
+        onClose()
+      }, 500)
+    }
   }
 
   // Close date details popover
@@ -152,8 +172,8 @@ const LunarCalendar: React.FC<LunarCalendarProps> = ({
         {/* Day headers */}
         <div className="grid grid-cols-7 mb-2">
           {dayNames.map((day) => (
-            <div key={day} className="text-center text-stardust/70 text-sm py-2 font-medium">
-              {day}
+            <div key={day} className="text-center text-stardust/70 text-xs md:text-sm py-1 md:py-2 font-medium">
+              {isMobile ? day.charAt(0) : day}
             </div>
           ))}
         </div>
@@ -172,7 +192,7 @@ const LunarCalendar: React.FC<LunarCalendarProps> = ({
               <motion.button
                 key={day.toString()}
                 className={`
-                  relative h-12 w-full rounded-full flex items-center justify-center
+                  relative h-8 md:h-12 w-full rounded-full flex items-center justify-center
                   ${isCurrentMonth ? "text-white" : "text-white/30"}
                   ${isToday ? "bg-space-700/50" : ""}
                   ${isSelected ? "bg-space-600/70" : ""}
@@ -189,20 +209,22 @@ const LunarCalendar: React.FC<LunarCalendarProps> = ({
                 )}
 
                 {/* Date Number */}
-                <span className={`z-10 ${isToday ? "font-bold" : ""} ${isSelected ? "text-moonglow font-bold" : ""}`}>
+                <span
+                  className={`z-10 text-xs md:text-base ${isToday ? "font-bold" : ""} ${isSelected ? "text-moonglow font-bold" : ""}`}
+                >
                   {format(day, "d")}
                 </span>
 
                 {/* Special Date Indicator */}
                 {isSpecialDateFlag && isCurrentMonth && (
-                  <div className="absolute top-1 right-1">
-                    <Star className="h-3 w-3 text-cyan-300" fill="#6EE7B7" />
+                  <div className="absolute top-0 md:top-1 right-0 md:right-1">
+                    <Star className="h-2 w-2 md:h-3 md:w-3 text-cyan-300" fill="#6EE7B7" />
                   </div>
                 )}
 
                 {/* Note Indicator */}
                 {hasNoteFlag && isCurrentMonth && (
-                  <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 h-2 w-2 rounded-full bg-pink-400"></div>
+                  <div className="absolute bottom-0 md:bottom-1 left-1/2 transform -translate-x-1/2 h-1 w-1 md:h-2 md:w-2 rounded-full bg-pink-400"></div>
                 )}
               </motion.button>
             )
@@ -222,7 +244,7 @@ const LunarCalendar: React.FC<LunarCalendarProps> = ({
     >
       {/* Calendar Container */}
       <motion.div
-        className="w-11/12 max-w-lg glassmorphism rounded-xl p-6 relative"
+        className="w-11/12 max-w-sm md:max-w-lg glassmorphism rounded-xl p-4 md:p-6 relative"
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.9 }}
@@ -236,12 +258,12 @@ const LunarCalendar: React.FC<LunarCalendarProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
-        <button className="absolute top-4 right-4 text-white/70 hover:text-white" onClick={onClose}>
-          <X className="h-5 w-5" />
+        <button className="absolute top-2 right-2 md:top-4 md:right-4 text-white/70 hover:text-white" onClick={onClose}>
+          <X className="h-4 w-4 md:h-5 md:w-5" />
         </button>
 
         {/* Calendar Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-4 md:mb-6">
           <motion.button
             whileHover={{ scale: 1.1, x: -2 }}
             whileTap={{ scale: 0.9 }}
@@ -249,10 +271,10 @@ const LunarCalendar: React.FC<LunarCalendarProps> = ({
             onClick={prevMonth}
             className="p-1 text-moonglow/70 hover:text-moonglow"
           >
-            <ChevronLeft className="h-6 w-6" />
+            <ChevronLeft className="h-5 w-5 md:h-6 md:w-6" />
           </motion.button>
 
-          <h2 className="text-xl font-bold text-white font-mono">{format(currentMonth, "MMMM yyyy")}</h2>
+          <h2 className="text-lg md:text-xl font-bold text-white font-mono">{format(currentMonth, "MMMM yyyy")}</h2>
 
           <motion.button
             whileHover={{ scale: 1.1, x: 2 }}
@@ -261,7 +283,7 @@ const LunarCalendar: React.FC<LunarCalendarProps> = ({
             onClick={nextMonth}
             className="p-1 text-moonglow/70 hover:text-moonglow"
           >
-            <ChevronRight className="h-6 w-6" />
+            <ChevronRight className="h-5 w-5 md:h-6 md:w-6" />
           </motion.button>
         </div>
 
@@ -270,32 +292,32 @@ const LunarCalendar: React.FC<LunarCalendarProps> = ({
 
         {/* Empty State */}
         {getDaysInMonth().every((day) => !hasNote(day) && !isSpecialDate(day) && !isFullMoon(day)) && (
-          <p className="text-center text-stardust/60 mt-6 font-poppins text-sm italic">
+          <p className="text-center text-stardust/60 mt-4 md:mt-6 font-poppins text-xs md:text-sm italic">
             No notes or events this month... yet. 🌙
           </p>
         )}
 
         {/* Legend */}
-        <div className="mt-6 flex flex-wrap gap-4 justify-center text-xs text-stardust/70">
+        <div className="mt-4 md:mt-6 flex flex-wrap gap-2 md:gap-4 justify-center text-xs">
           <div className="flex items-center gap-1">
-            <div className="h-3 w-3 rounded-full border border-moonglow/70"></div>
+            <div className="h-2 w-2 md:h-3 md:w-3 rounded-full border border-moonglow/70"></div>
             <span>Full Moon</span>
           </div>
           <div className="flex items-center gap-1">
-            <Star className="h-3 w-3 text-cyan-300" fill="#6EE7B7" />
+            <Star className="h-2 w-2 md:h-3 md:w-3 text-cyan-300" fill="#6EE7B7" />
             <span>Special Day</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="h-2 w-2 rounded-full bg-pink-400"></div>
+            <div className="h-1 w-1 md:h-2 md:w-2 rounded-full bg-pink-400"></div>
             <span>Saved Note</span>
           </div>
         </div>
       </motion.div>
 
-      {/* Date Details Popover */}
-      {selectedDate && (
+      {/* Date Details Popover - Only show on larger screens */}
+      {selectedDate && !isMobile && (
         <motion.div
-          className="absolute glassmorphism rounded-lg p-4 shadow-xl max-w-xs w-full"
+          className="absolute glassmorphism rounded-lg p-3 md:p-4 shadow-xl max-w-xs w-full"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.9 }}
@@ -308,16 +330,16 @@ const LunarCalendar: React.FC<LunarCalendarProps> = ({
           onClick={(e) => e.stopPropagation()}
         >
           <button className="absolute top-2 right-2 text-white/70 hover:text-white" onClick={closeDetails}>
-            <X className="h-4 w-4" />
+            <X className="h-3 w-3 md:h-4 md:w-4" />
           </button>
 
-          <div className="flex items-center gap-3 mb-3">
-            <div className="h-10 w-10 flex items-center justify-center bg-space-700/50 rounded-full">
+          <div className="flex items-center gap-2 md:gap-3 mb-2 md:mb-3">
+            <div className="h-8 w-8 md:h-10 md:w-10 flex items-center justify-center bg-space-700/50 rounded-full text-sm md:text-base">
               {format(selectedDate.date, "d")}
             </div>
             <div>
-              <h3 className="font-medium">{format(selectedDate.date, "MMMM d, yyyy")}</h3>
-              <div className="flex items-center text-sm text-stardust/70">
+              <h3 className="font-medium text-sm md:text-base">{format(selectedDate.date, "MMMM d, yyyy")}</h3>
+              <div className="flex items-center text-xs md:text-sm text-stardust/70">
                 <Moon className="h-3 w-3 mr-1" />
                 {selectedDate.moonPhase}
               </div>
@@ -325,28 +347,28 @@ const LunarCalendar: React.FC<LunarCalendarProps> = ({
           </div>
 
           {selectedDate.isFullMoon && (
-            <div className="mb-3 p-2 bg-space-700/30 rounded border-l-2 border-moonglow">
-              <h4 className="text-moonglow font-medium">Full Moon Tonight!</h4>
-              <p className="text-sm text-stardust/80">A time for completion and clarity.</p>
+            <div className="mb-2 md:mb-3 p-2 bg-space-700/30 rounded border-l-2 border-moonglow">
+              <h4 className="text-moonglow font-medium text-xs md:text-sm">Full Moon Tonight!</h4>
+              <p className="text-xs text-stardust/80">A time for completion and clarity.</p>
             </div>
           )}
 
           {selectedDate.isSpecialDate && selectedDate.specialMessage && (
-            <div className="mb-3 p-2 bg-space-700/30 rounded border-l-2 border-cyan-400">
-              <h4 className="text-cyan-300 font-medium">A Special Day ✨</h4>
-              <p className="text-sm text-stardust/80">{selectedDate.specialMessage}</p>
+            <div className="mb-2 md:mb-3 p-2 bg-space-700/30 rounded border-l-2 border-cyan-400">
+              <h4 className="text-cyan-300 font-medium text-xs md:text-sm">A Special Day ✨</h4>
+              <p className="text-xs text-stardust/80">{selectedDate.specialMessage}</p>
             </div>
           )}
 
           {selectedDate.hasNote && selectedDate.noteText && (
             <div className="p-2 bg-space-700/30 rounded border-l-2 border-pink-400">
-              <h4 className="text-pink-300 font-medium">Your Note:</h4>
-              <p className="text-sm text-stardust/80 line-clamp-3">{selectedDate.noteText}</p>
+              <h4 className="text-pink-300 font-medium text-xs md:text-sm">Your Note:</h4>
+              <p className="text-xs text-stardust/80 line-clamp-3">{selectedDate.noteText}</p>
             </div>
           )}
 
           {!selectedDate.isFullMoon && !selectedDate.isSpecialDate && !selectedDate.hasNote && (
-            <p className="text-center text-stardust/60 italic text-sm">No events or notes for this day.</p>
+            <p className="text-center text-stardust/60 italic text-xs">No events or notes for this day.</p>
           )}
         </motion.div>
       )}
