@@ -17,7 +17,7 @@ interface AuthContextType {
   currentUser: User | null
   loading: boolean
   signup: (email: string, password: string, displayName: string) => Promise<void>
-  login: (email: string, password: string) => Promise<void>
+  login: (email: string, password: string) => Promise<void> // Changed return type to match implementation
   loginWithGoogle: () => Promise<void>
   logout: () => Promise<void>
 }
@@ -45,8 +45,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     await updateProfile(userCredential.user, { displayName })
   }
 
-  function login(email: string, password: string) {
-    return signInWithEmailAndPassword(auth, email, password)
+  // Updated to return void
+  async function login(email: string, password: string): Promise<void> {
+    await signInWithEmailAndPassword(auth, email, password)
   }
 
   async function loginWithGoogle() {
