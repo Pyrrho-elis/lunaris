@@ -12,6 +12,7 @@ import UserProfile from "./components/UserProfile"
 import { getMoonPhase, getMoonIllumination, getNextFullMoonDate } from "./utils/moonCalculations"
 import { AuthProvider, useAuth } from "./contexts/AuthContext"
 import { saveNote, getUserNotes, updateNote, type Note } from "./services/noteService"
+import { Analytics } from "@vercel/analytics/react"
 
 function AppContent() {
   const { currentUser, logout } = useAuth()
@@ -172,6 +173,7 @@ function AppContent() {
 
   return (
     <div className="cosmic-container min-h-screen">
+      <Analytics />
       <StarField optimized={true} />
 
       <div className="container mx-auto px-4 py-4 md:py-8 relative z-10">
