@@ -3,8 +3,9 @@
 @tailwind utilities;
 
 body {
-  @apply bg-space-900 text-white font-sans overflow-x-hidden;
-  background: linear-gradient(to bottom, #0b0719, #2c1950);
+  /* @apply bg-space-900 text-white font-sans overflow-x-hidden; */
+  /* background: linear-gradient(to bottom, #0b0719, #2c1950); */
+  background: black;
   min-height: 100vh;
 }
 
